@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void freeMatrix(int **M, int m) {
+  for (int i = 0; i < m; i++) {
+    free(M[i]);
+  }
+  free(M);
+}
+
 int *allocVector(int n) { return (int *)malloc(n * sizeof(int)); }
 
 // A function to allocate an m by n matrix,
@@ -60,6 +67,9 @@ int main() {
   // Print the transposed Matrix
   printf("\nTransposed Matrix:\n");
   writeMatrix(MT, n, m);
+
+  freeMatrix(M, m);
+  freeMatrix(MT, n);
 
   return 0;
 }

@@ -2,6 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void freeMatrix(int **M, int m) {
+  for (int i = 0; i < m; i++) {
+    free(M[i]);
+  }
+  free(M);
+}
+
 // allocVector, allocMatrix, writeMatrix functions
 // previously defined ...
 int *allocVector(int n) { return (int *)malloc(n * sizeof(int)); }
@@ -29,16 +36,21 @@ void writeMatrix(int **M, int m, int n) {
   }
 }
 
+int **transpose(int **M, int m, int n) {
+  int **MT = allocMatrix(n, m);
+
+  for (int i = 0; i < m; i++) {
+    for (int j = 0; j < n; j++) {
+      MT[j][i] = M[i][j];
+    }
+  }
+
+  return MT;
+}
+
 // matrix product of M1 (m rows, n columns) with M2, with result in M3
 void matrixProd(int **M1, int **M2, int **M3, int m, int n) {
-  // To be written
-  for (int i = 0; i < m; i++) {
-    int cij;
-    for (int j = 0; j < n; j++) {
-      cij += M1[i][j] * M2[j][i];
-    }
-    M3[i][i] = cij;
-  }
+  // Past Goudham to Future Goudham: You've failed so far but you got this :D
 }
 
 int main() {
@@ -78,12 +90,9 @@ int main() {
   printf("\nMatrix Three:\n");
   writeMatrix(M3, m, m);
 
-  free(*M1);
-  free(*M2);
-  free(*M3);
-  free(M1);
-  free(M2);
-  free(M3);
+  freeMatrix(M1, m);
+  freeMatrix(M2, n);
+  freeMatrix(M3, m);
 
   return 0;
 }
