@@ -30,7 +30,7 @@ int **allocMatrix(int m, int n) {
 void writeMatrix(int **M, int m, int n) {
   for (int i = 0; i < m; i++) {
     for (int j = 0; j < n; j++) {
-      printf("%i", M[i][j]);
+      printf("%i ", M[i][j]);
     }
     printf("\n");
   }
@@ -50,7 +50,15 @@ int **transpose(int **M, int m, int n) {
 
 // matrix product of M1 (m rows, n columns) with M2, with result in M3
 void matrixProd(int **M1, int **M2, int **M3, int m, int n) {
-  // Past Goudham to Future Goudham: You've failed so far but you got this :D
+  for (int i = 0; i < m; i++) {
+    for (int j = 0; j < m; j++) {
+      int cij = 0;
+      for (int k = 0; k < n; k++) {
+        cij += M1[i][k] * M2[k][j];
+      }
+      M3[i][j] = cij;
+    }
+  }
 }
 
 int main() {
