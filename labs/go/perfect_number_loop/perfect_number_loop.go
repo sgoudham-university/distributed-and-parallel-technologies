@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
 	"time"
 )
 
@@ -39,22 +37,26 @@ func perfectLoop(input int64) {
 	}
 }
 
+func perfectLoopInterval(l,u int64) {
+	for i := l; i <= u; i++ {
+		if perfect(i) {
+			fmt.Println(i, "is perfect")
+		}
+	}
+}
+
 func main() {
-	var input int64
-	var err error
-
-	if len(os.Args) < 2 {
-		panic(fmt.Sprintf("Usage: must provide number as an argument"))
-	}
-
-	if input, err = strconv.ParseInt(os.Args[1], 10, 64); err != nil {
-		panic(fmt.Sprintf("Can't parse the first argument"))
-	}
-
 	// Record start time
 	start := time.Now()
+
 	// Compute
-	perfectLoop(input)
+	for i := int64(0); i < 10000; i += 1000 {
+		if i == 0 {
+			i += 1
+		}
+		perfectLoopInterval(i, int64(i + 1000))
+	}
+
 	// Record the elapsed time
 	t := time.Now()
 	elapsed := t.Sub(start)

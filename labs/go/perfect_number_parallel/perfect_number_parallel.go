@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"sync"
+	"time"
 )
 
 func perfect(n int64) bool {
@@ -22,32 +24,41 @@ func perfect(n int64) bool {
 	return running_count == n
 }
 
-func perfectInterval(l, u int64, c chan int64) {
+func perfectInterval(l, u int64, c chan int64, wg *sync.WaitGroup) {
 	for i := l; i < u; i++ {
 		if perfect(i) {
 			c <- i
 		}
 	}
 
-	close(c)
+	wg.Done()
 }
 
 func main() {
-	ch := make(chan int64)
+	// Record start time
+	start := time.Now()
+
+	// Compute
+	var wg sync.WaitGroup
+	ch := make(chan int64, 10)
 
 	for i := int64(0); i < 10000; i += 1000 {
 		if i == 0 {
 			i += 1
 		}
-		go perfectInterval(i, int64(i + 1000), ch)
+		wg.Add(1)
+		go perfectInterval(i, int64(i + 1000), ch, &wg)
 	}
 
-	// Currently, the main thread finishes before all the
-	// goroutines have had a chance to finish
+	wg.Wait()
+	close(ch)
 
-	// Unsure of how to ensure all goroutines are ran without
-	// modifying the function signature of perfectInterval()
 	for i := range ch {
 		fmt.Println(i, "is perfect")
 	}
+
+	// Record the elapsed time
+	t := time.Now()
+	elapsed := t.Sub(start)
+	fmt.Println("Elapsed time", elapsed)
 }
